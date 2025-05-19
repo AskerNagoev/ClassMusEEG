@@ -727,7 +727,7 @@ def recreate_model(params, weights_file=None, freeze_layers=True, X_train=None):
 
     return model
 
-def confusion_matrix(model, X_test, y_test):
+def matrix_confusion(model, X_test, y_test):
     """
     Строится и визуализируется матрица ошибок для заданной модели на тестовых данных.
 
