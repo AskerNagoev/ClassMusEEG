@@ -738,8 +738,11 @@ def matrix_confusion(model, X_test, y_test):
     # Получаются предсказания на тестовых данных
     y_pred = model.predict(X_test)
 
-    # Извлекаются метки с максимальной вероятностью для каждого примера
-    y_pred_labels = np.argmax(y_pred, axis=1)
+    # Если модель возвращает вероятности (например, для многоклассовой классификации), извлекаем метки
+    if len(y_pred.shape) > 1 and y_pred.shape[1] > 1:  # если y_pred - это вероятности
+        y_pred_labels = np.argmax(y_pred, axis=1)
+    else:  # если модель уже возвращает метки классов
+        y_pred_labels = y_pred
 
     # Вычисляется количество классов (на основе данных или предсказаний)
     num_classes = len(np.unique(np.concatenate((y_test, y_pred_labels))))
@@ -755,4 +758,4 @@ def matrix_confusion(model, X_test, y_test):
     plt.xlabel('Предсказанный класс')
     plt.ylabel('Истинный класс')
     plt.title('Матрица ошибок')
-    plt.show() 
+    plt.show()
