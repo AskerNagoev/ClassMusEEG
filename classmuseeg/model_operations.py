@@ -540,7 +540,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
     accuracy = accuracy_score(y_test, y_test_pred)
     print(f"Accuracy на тестовой выборке: {accuracy:.4f}")
 
-    return scaler, best_model
+    return best_model, scaler
 
 def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
     """
