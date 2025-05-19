@@ -60,10 +60,11 @@ pip install -e .
 ```
 ClassMusEEG/
 │
-├── __init__.py               # Главный файл библиотеки
-├── data_preprocessing.py     # Загрузка и подготовка данных
-├── feature_extraction.py     # Извлечение признаков
-├── model_operations.py       # Работа с моделями
+├── classmuseeg/              # Основная папка с кодом
+│   ├── __init__.py           # Главный файл библиотеки
+│   ├── data_preprocessing.py # Загрузка и подготовка данных
+│   ├── feature_extraction.py # Извлечение признаков
+│   ├── model_operations.py   # Работа с моделями
 │
 ├── setup.py                  # Файл для установки библиотеки
 ├── README.md                 # Документация
