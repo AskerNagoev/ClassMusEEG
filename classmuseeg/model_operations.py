@@ -644,7 +644,7 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
 
     return scaler, best_model
 
-def recreate_model(params, weights_file=None, freeze_layers=True):
+def recreate_model(params, weights_file=None, freeze_layers=True, X_train=None):
     """
     Восстанавливается модель с гиперпараметрами, указанными в параметрах.
     Веса модели загружаются, если указан файл с весами. Также есть возможность
@@ -653,6 +653,7 @@ def recreate_model(params, weights_file=None, freeze_layers=True):
     :param params: Гиперпараметры, которые будут использоваться для создания модели.
     :param weights_file: Файл с весами модели, которые будут загружены.
     :param freeze_layers: Если True, все слои, кроме последних, будут заморожены.
+    :param X_train: Признаки обучающей выборки.
     :return: Восстановленная модель.
     """
     model = Sequential()
