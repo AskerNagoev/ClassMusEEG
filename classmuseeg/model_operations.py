@@ -449,7 +449,7 @@ def optimize_model_bilstm(X_train, y_train, X_val, y_val, X_test, y_test, n_tria
 
     return results_df, saved_trials
 
-def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
+def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=100):
     """
     Оптимизируется модель классификатора SVM (Support Vector Machine)
     с использованием Optuna для выбора гиперпараметров.
@@ -461,6 +461,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
     :param y_train: Метки обучающей выборки
     :param y_val: Метки валидационной выборки
     :param y_test: Метки тестовой выборки
+    :param n_trials: Количество итераций для оптимизации
     :return: scaler: Обученный скейлер для дальнейшего использования
              best_model: Лучшая обученная модель с оптимизированными гиперпараметрами
     """
@@ -512,7 +513,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
     study = optuna.create_study(direction='maximize', study_name='SVM_Optimization')
     
     print("Запуск оптимизации гиперпараметров SVM с Optuna...")
-    study.optimize(objective, n_trials=100, n_jobs=-1)  # Используем n_jobs=-1 для многозадачности
+    study.optimize(objective, n_trials=n_trials, n_jobs=-1)  # Используем n_jobs=-1 для многозадачности
 
     # Получаются лучшие параметры, найденные Optuna
     best_params = study.best_trial.params
@@ -542,7 +543,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
 
     return best_model, scaler
 
-def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
+def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=100):
     """
     Оптимизируется модель линейного классификатора с помощью стохастического градиентного спуска (SGD)
     с использованием Optuna для выбора гиперпараметров.
@@ -554,6 +555,7 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
     :param y_train: Метки обучающей выборки
     :param y_val: Метки валидационной выборки
     :param y_test: Метки тестовой выборки
+    :param n_trials: Количество итераций для оптимизации
     :return: best_model: Лучшая обученная модель с оптимизированными гиперпараметрами
              scaler: Обученный скейлер для дальнейшего использования
     """
@@ -614,7 +616,7 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
     study = optuna.create_study(direction='maximize', study_name='SGDClassifier_Optimization')
     
     print("Запуск оптимизации гиперпараметров с Optuna...")
-    study.optimize(objective, n_trials=100, n_jobs=-1)
+    study.optimize(objective, n_trials=n_trials, n_jobs=-1)
 
     # Получаются лучшие параметры, найденные Optuna
     best_params = study.best_trial.params
