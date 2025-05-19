@@ -512,7 +512,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test):
     study = optuna.create_study(direction='maximize', study_name='SVM_Optimization')
     
     print("Запуск оптимизации гиперпараметров SVM с Optuna...")
-    study.optimize(objective, n_trials=100, n_jobs=1)
+    study.optimize(objective, n_trials=100, n_jobs=-1)  # Используем n_jobs=-1 для многозадачности
 
     # Получаются лучшие параметры, найденные Optuna
     best_params = study.best_trial.params
@@ -554,8 +554,8 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
     :param y_train: Метки обучающей выборки
     :param y_val: Метки валидационной выборки
     :param y_test: Метки тестовой выборки
-    :return: scaler: Обученный скейлер для дальнейшего использования
-             best_model: Лучшая обученная модель с оптимизированными гиперпараметрами
+    :return: best_model: Лучшая обученная модель с оптимизированными гиперпараметрами
+             scaler: Обученный скейлер для дальнейшего использования
     """
     # Стандартизация данных
     scaler = StandardScaler()
@@ -642,7 +642,7 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test):
     accuracy = accuracy_score(y_test, y_test_pred)
     print(f"Accuracy на тестовой выборке: {accuracy:.4f}")
 
-    return scaler, best_model
+    return best_model, scaler
 
 def recreate_model(params, weights_file=None, freeze_layers=True, X_train=None):
     """
