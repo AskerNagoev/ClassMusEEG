@@ -201,8 +201,8 @@ def optimize_model_lstm(X_train, y_train, X_val, y_val, X_test, y_test, n_trials
             if dropout_rate > 0:
                 model.add(Dropout(dropout_rate))
 
-        # Финальный слой для классификации с 3 выходами
-        num_classes = len(np.unique(y))
+        # Финальный слой для классификации с мняющимся количеством выходов
+        num_classes = len(np.unique(y_train))
         model.add(Dense(num_classes, activation='softmax'))  
 
         # Выбор оптимизатора и начальной скорости обучения
@@ -366,8 +366,9 @@ def optimize_model_bilstm(X_train, y_train, X_val, y_val, X_test, y_test, n_tria
             if dropout_rate > 0:
                 model.add(Dropout(dropout_rate))
 
-        # Финальный слой для классификации с 3 выходами
-        model.add(Dense(3, activation='softmax'))  
+        # Финальный слой для классификации с мняющимся количеством выходов
+        num_classes = len(np.unique(y_train))
+        model.add(Dense(num_classes, activation='softmax'))
 
         # Выбор оптимизатора и начальной скорости обучения
         optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "SGD"])
