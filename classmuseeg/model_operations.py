@@ -202,7 +202,8 @@ def optimize_model_lstm(X_train, y_train, X_val, y_val, X_test, y_test, n_trials
                 model.add(Dropout(dropout_rate))
 
         # Финальный слой для классификации с 3 выходами
-        model.add(Dense(3, activation='softmax'))  
+        num_classes = len(np.unique(y))
+        model.add(Dense(num_classes, activation='softmax'))  
 
         # Выбор оптимизатора и начальной скорости обучения
         optimizer_name = trial.suggest_categorical("optimizer", ["Adam", "RMSprop", "SGD"])
