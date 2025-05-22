@@ -534,14 +534,18 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
     print('\nОтчет по классификации на валидационной выборке (с лучшей моделью, обученной на X_train):')
     print(classification_report(y_val, y_val_pred))
 
+    # Выводится точность на валидационной выборке
+    val_accuracy = accuracy_score(y_val, y_val_pred)
+    print(f"Validation Accuracy на валидационной выборке: {val_accuracy:.6f}")
+
     # Оценка лучшей модели на тестовой выборке
     y_test_pred = best_model.predict(X_test_scaled)
     print('\nОтчет по классификации на тестовой выборке:')
     print(classification_report(y_test, y_test_pred))
 
     # Выводится значение accuracy для тестовой выборки
-    accuracy = accuracy_score(y_test, y_test_pred)
-    print(f"Accuracy на тестовой выборке: {accuracy:.4f}")
+    test_accuracy = accuracy_score(y_test, y_test_pred)
+    print(f"Accuracy на тестовой выборке: {test_accuracy:.6f}")
 
     return best_model, scaler
 
@@ -637,14 +641,18 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
     print('\nОтчет по классификации на валидационной выборке (с лучшей моделью, обученной на X_train):')
     print(classification_report(y_val, y_val_pred))
 
+    # Выводится точность на валидационной выборке
+    val_accuracy = accuracy_score(y_val, y_val_pred)
+    print(f"Validation Accuracy на валидационной выборке: {val_accuracy:.6f}")
+
     # Оценка лучшей модели на тестовой выборке
     y_test_pred = best_model.predict(X_test_scaled)
     print('\nОтчет по классификации на тестовой выборке:')
     print(classification_report(y_test, y_test_pred))
 
     # Выводится значение accuracy для тестовой выборки
-    accuracy = accuracy_score(y_test, y_test_pred)
-    print(f"Accuracy на тестовой выборке: {accuracy:.4f}")
+    test_accuracy = accuracy_score(y_test, y_test_pred)
+    print(f"Accuracy на тестовой выборке: {test_accuracy:.6f}")
 
     return best_model, scaler
 
