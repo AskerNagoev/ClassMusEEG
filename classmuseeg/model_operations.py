@@ -500,19 +500,19 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
                 svc_params['coef0'] = trial.suggest_float('coef0', -1.0, 1.0)
 
         # Создается модель SVC с предложенными гиперпараметрами
-        model = SVC(**svc_params)
+        model = SVC(probability=True, **svc_params)  # Включаем probability=True для использования predict_proba
 
         # Обучение модели на обучающих данных
         model.fit(X_train_scaled, y_train)
 
-        # Оценка модели на валидационной выборке
-        y_val_pred = model.predict(X_val_scaled)
-        accuracy = accuracy_score(y_val, y_val_pred)
+        # Оценка модели на валидационной выборке (используем predict_proba для вычисления log_loss)
+        y_val_prob = model.predict_proba(X_val_scaled)
+        val_loss = log_loss(y_val, y_val_prob)
 
-        return accuracy
+        return val_loss
 
     # Создается исследование Optuna и запускается оптимизация
-    study = optuna.create_study(direction='maximize', study_name='SVM_Optimization')
+    study = optuna.create_study(direction='minimize', study_name='SVM_Optimization')  # Минимизируем потери
     
     print("Запуск оптимизации гиперпараметров SVM с Optuna...")
     study.optimize(objective, n_trials=n_trials, n_jobs=-1)  # Используем n_jobs=-1 для многозадачности
@@ -523,7 +523,7 @@ def optimize_model_svm(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
 
     # Получается обученная модель с лучшими гиперпараметрами
     best_model_params = best_params.copy()
-    best_model = SVC(random_state=42, **best_model_params)
+    best_model = SVC(probability=True, random_state=42, **best_model_params)
 
     # Обучение лучшей модели на всей обучающей выборке
     print("\nОбучение финальной модели SVM с лучшими параметрами...")
@@ -612,14 +612,14 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
         # Обучение модели на обучающей выборке
         model.fit(X_train_scaled, y_train)
 
-        # Оценка модели на валидационной выборке
-        y_val_pred = model.predict(X_val_scaled)
-        accuracy = accuracy_score(y_val, y_val_pred)
+        # Оценка модели на валидационной выборке (используем predict_proba для вычисления log_loss)
+        y_val_prob = model.predict_proba(X_val_scaled)  # Получаем вероятности
+        val_loss = log_loss(y_val, y_val_prob)  # Рассчитываем потери
 
-        return accuracy
+        return val_loss
 
     # Создается исследование Optuna и запускается оптимизация
-    study = optuna.create_study(direction='maximize', study_name='SGDClassifier_Optimization')
+    study = optuna.create_study(direction='minimize', study_name='SGDClassifier_Optimization')  # Минимизируем потери
     
     print("Запуск оптимизации гиперпараметров с Optuna...")
     study.optimize(objective, n_trials=n_trials, n_jobs=-1)
