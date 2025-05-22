@@ -573,14 +573,15 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
 
     def objective(trial):
         """
-        Целевая функция для Optuna, которая определяет гиперпараметры для SGDClassifier,
-        обучает модель и возвращает метрику для оптимизации (точность на валидационной выборке).
+        Целевая функция для Optuna, которая выбирает гиперпараметры для SGDClassifier,
+        обучает модель и возвращает метрику для оптимизации (потери на валидационной выборке).
         
         :param trial: Текущий проба гиперпараметров.
-        :return: Точность модели на валидационной выборке.
+        :return: Потери модели на валидационной выборке (log_loss).
         """
-        # Определяются диапазоны гиперпараметров для поиска Optuna
-        loss = trial.suggest_categorical('loss', ['hinge', 'log_loss', 'squared_hinge', 'perceptron'])
+        # Ограничиваем выбор loss теми, которые поддерживают predict_proba
+        loss = trial.suggest_categorical('loss', ['log_loss', 'modified_huber'])
+
         alpha = trial.suggest_float('alpha', 1e-5, 1e-2, log=True)
         max_iter = trial.suggest_int('max_iter', 1000, 10000, step=1000)
         tol = trial.suggest_float('tol', 1e-4, 1e-2, log=True)
@@ -613,8 +614,12 @@ def optimize_model_sgd(X_train, X_val, X_test, y_train, y_val, y_test, n_trials=
         model.fit(X_train_scaled, y_train)
 
         # Оценка модели на валидационной выборке (используем predict_proba для вычисления log_loss)
-        y_val_prob = model.predict_proba(X_val_scaled)  # Получаем вероятности
-        val_loss = log_loss(y_val, y_val_prob)  # Рассчитываем потери
+        try:
+            y_val_prob = model.predict_proba(X_val_scaled)  # Получаем вероятности
+            val_loss = log_loss(y_val, y_val_prob)  # Рассчитываем потери
+        except AttributeError:
+            # Если модель не поддерживает predict_proba, просто пропустим её
+            return float('inf')
 
         return val_loss
 
